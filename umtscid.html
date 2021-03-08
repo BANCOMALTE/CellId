@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <title>CidUMTS</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    
+    <script src="https://tiles.unwiredmaps.com/js/leaflet-unwired.js"></script>
+    <script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet/0.0.1-beta.5/esri-leaflet.js"></script>
+    <script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.js"></script>
+     <link rel="stylesheet" type="text/css" href="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">   
+     <!-- location control -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+<!-- location control -->
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+<!-- geocoding plugin -->
+<link rel="stylesheet" href="https://maps.locationiq.com/v2/libs/leaflet-geocoder/1.9.5/leaflet-geocoder-locationiq.min.css">
+<script src="https://maps.locationiq.com/v2/libs/leaflet-geocoder/1.9.5/leaflet-geocoder-locationiq.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.0.2/control/Permalink.js"></script>
+	     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw-src.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw-src.css">
+   <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-174580127-1"></script>
+</head>
+
+<body>
+<script>
+
+        
+    function funzione() {
+var rnc = $("#rnc").val(),
+ cellid = $("#cellid").val(),
+ longcid = $("#longcid").val(),
+tech = $("#tech").val(),
+enb = $("#enb").val(),
+sec = $("#sec").val();
+ $("#result").html("");
+if(tech == "umts") {
+if(longcid == "" && (cellid != "" || rnc != ""))
+{longcid =  Number(cellid) + 65536 * rnc ;}
+else if(longcid != "" && (cellid == "" || rnc == "")) {
+rnc =  parseInt(longcid/65536);
+cellid = longcid - ( rnc* 65536 );
+} } else if ( tech == "lte") {
+  if(longcid == "" && (enb != "" || sec != "")) {
+   longcid =  enb * 256 + Number(sec)
+      } else if(longcid != "" && (enb == "" || sec == "")) {
+        enb = parseInt(longcid/256);
+       sec = longcid - (enb * 256);
+}}
+if(tech == "umts") {
+ html = '<div class="card-group">';
+ html = '<div class="card col-2">';
+html += "<b>RNC:</b> " + rnc+ "<br />";
+html += "<b>LONG CELL ID:</b> " + longcid+ "<br />";
+html += "<b>CELL ID:</b> " + cellid + "<br /><br />";
+html += "</div>";
+ $("#result").append(html); } 
+ else if ( tech == "lte") {html = '<div class="card-group">';
+ html = '<div class="card col-2">';
+
+html += "<b>LONG CELL ID:</b> " + longcid + "<br />";
+html += "<b>SETTORE:</b> " + sec + "<br />";
+html += "<b>ENODEB:</b> " + enb + "<br /><br />";
+html += "</div>";
+ $("#result").append(html);}
+
+/*document.write("LONG CELL ID: " + longcid + "<br />" + "RNC: " + rnc  + "<br />"  + "CELL ID:  " + cellid); */
+
+}
+</script>
+<div class="form-row">
+<input type="number"  id="rnc" class="form-control" placeholder="RNC" required>
+<input type="number"  id="cellid" class="form-control" placeholder="CellID" required>
+<input type="number"  id="longcid" class="form-control" placeholder="Long CellID" required>
+<input type="number"  id="sec" class="form-control" placeholder="Sector" required>
+<input type="number"  id="enb" class="form-control" placeholder="Enodeb" required>
+
+
+	
+<select id="tech" class="form-control" >
+      <option selected disabled>TECHNOLOGY</option>
+  <option value="lte">LTE</option>
+        <option value="umts">UMTS</option>
+        
+      </select>
+      <button onclick="funzione()">Go</button>
+<div id="result" class="row pt-2"></div>
+ </div>
+</body>
+</html>
